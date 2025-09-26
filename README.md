@@ -23,60 +23,62 @@
 ## Example Output
 ```
 —— TaskMaster ——
-
+ 
 Add task? (y/n): Y
-Enter subject/category: MATH
+Enter
+subject/category: MATH
 Enter task: Problem Set 5
 Task saved under [MATH].
-
+ 
 Add more tasks? (y/n): Y
-Enter subject/category: SCIENCE
+Enter
+subject/category: SCIENCE
 Enter task: Lab Report #2
 Task saved under [SCIENCE].
-
+ 
 Add more tasks? (y/n): N
 Back to main menu? (y/n): Y
-
+ 
 —— TaskMaster ——
-
+ 
 View tasks? (y/n): Y
 Categories:
 1. MATH
 2. SCIENCE
 Select category: 1
-
+ 
 Tasks in [MATH]:
 - Problem Set 5
-
+ 
 Back to view tasks? (y/n): N
 Back to main menu? (y/n): Y
-
+ 
 —— TaskMaster ——
-
+ 
 Update task? (y/n): Y
 Select category: SCIENCE
-
+ 
 Tasks in [SCIENCE]:
 1. Lab Report #2
 Select task to update: 1
 Task updated to "DONE".
-
+ 
 Update more tasks? (y/n): N
 Back to main menu? (y/n): Y
-
+ 
 —— TaskMaster ——
-
+ 
 Remove task? (y/n): Y
 Select category: MATH
 Tasks in [MATH]:
 1. Problem Set 5
 Select task to remove: 1
-
+ 
 Task removed successfully.
-
+ 
 Remove more tasks? (y/n): N
 Back to main menu? (y/n): N
-
+ 
 —— Program Exited Successfully ——
 ```
 
