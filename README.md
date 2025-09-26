@@ -21,6 +21,7 @@
 5.    Run the program by clicking 'Run' or pressing F5
 
 ## Example Output
+```
 —— TaskMaster ——
 
 Add task? (y/n): Y
@@ -41,7 +42,7 @@ Back to main menu? (y/n): Y
 View tasks? (y/n): Y
 Categories:
 1. MATH
-2. 2. SCIENCE
+2. SCIENCE
 Select category: 1
 
 Tasks in [MATH]:
@@ -77,4 +78,4 @@ Remove more tasks? (y/n): N
 Back to main menu? (y/n): N
 
 —— Program Exited Successfully ——
-
+```
