@@ -36,7 +36,7 @@
   - "Task removed" and ask for more removals (yes/no).
   - "Goodbye!" when exiting.
 
-# Logic Plan
+# Logic Plan (Pseudocode)
 ```
 START
     repeat
