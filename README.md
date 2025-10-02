@@ -1,7 +1,9 @@
 # camia_AmanteNarca
 
 # INITIAL DRAFT
-# TaskMaster
+# Project Title
+- TaskMaster
+
 # Problem Statement
 - For many aspiring scholars, we are prone to be  overloaded with many academic requirements. More often that not, there are times we tend to lose track of tasks we need to accomplish. Hence, we aim to promote a sustainable way to mitigate the hassle of being lost in your assignments. 
 
