@@ -1,0 +1,32 @@
+{
+    "MATH": [
+        {
+            "task": "Problem Set 5",
+            "priority": "High",
+            "due": "March 10",
+            "status": "pending"
+        },
+        {
+            "task": "Quiz Review",
+            "priority": "Medium",
+            "due": "March 12",
+            "status": "done"
+        }
+    ],
+    "SCIENCE": [
+        {
+            "task": "Lab Report #2",
+            "priority": "High",
+            "due": "March 11",
+            "status": "pending"
+        }
+    ],
+    "ENGLISH": [
+        {
+            "task": "Essay Draft",
+            "priority": "Medium",
+            "due": "March 15",
+            "status": "pending"
+        }
+    ]
+}
