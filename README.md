@@ -28,11 +28,10 @@ Students often face difficulties in tracking multiple assignments, deadlines, an
 - Menu Navigation System
 
 ## How to Run the Program
-1. Install Python
-2. Download the project files
-3. Open terminal or command prompt
+1. Make sure Python is installed
+2. Place all files in the same folder
+3. Open terminal / command prompt
 4. Run:
-   python main.py
 
 ## Sample Output
 
