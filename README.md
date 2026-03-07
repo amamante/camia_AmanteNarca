@@ -43,7 +43,7 @@ Students often face difficulties in tracking multiple assignments, deadlines, an
 4. Remove Task
 5. Exit
 
-Choose an option: 1
+Choose an option: Add Task
 
 Enter category: MATH  
 Enter task: Problem Set 5  
