@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Task Manager</title>
+<style>
+body { font-family: Arial, sans-serif; background-color: #e0f7ff; margin:0; padding:0; }
+.container { display: flex; flex-direction: row; padding: 20px; gap: 30px; }
+.input-section { flex:1; background:#f0f8ff; padding:20px; border-radius:20px; box-shadow:2px 2px 10px rgba(0,0,0,0.1);}
+.input-section h2 { margin-top:0; }
+.input-section label { display:block; margin-top:10px; }
+.input-section input, .input-section select { width:90%; padding:8px; margin-top:5px; border-radius:10px; border:1px solid #ccc; font-size:14px; }
+.input-section button { margin-top:15px; padding:10px 20px; background-color:lavender; border:none; border-radius:15px; font-size:16px; cursor:pointer; }
+.tasks-section { flex:2; display:flex; flex-direction:column; gap:20px; }
+.task-list { background:#f7f7f7; border-radius:20px; padding:15px; box-shadow:1px 1px 8px rgba(0,0,0,0.1);}
+.task-list h3 { margin-top:0; }
+.task { display:flex; justify-content:space-between; align-items:center; padding:8px 10px; border-radius:15px; margin:5px 0; position:relative;}
+.task-info { flex:1; }
+.task .priority-block { width:15px; height:15px; border-radius:50%; display:inline-block; margin-right:10px; vertical-align:middle; }
+.task button { margin-left:10px; padding:5px 10px; border:none; border-radius:10px; cursor:pointer; }
+/* Pastel colors */
+.urgent { background-color:#ffcccc; }
+.medium { background-color:#fff5b3; }
+.low { background-color:#cce0ff; }
+.completed { background-color:#ccffdd; }
+
+#sweetMessage { position: fixed; top:20px; left:50%; transform:translateX(-50%); background-color:#ffebcd; padding:15px 25px; border-radius:15px; font-size:18px; font-weight:bold; display:none; box-shadow:2px 2px 12px rgba(0,0,0,0.2);}
+.footer { position: fixed; bottom:5px; right:15px; font-size:12px; color:#555; }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="input-section">
+    <h2>Add Task</h2>
+    <label>Subject:</label>
+    <input type="text" id="subjectInput" placeholder="e.g., Algebra">
+    <label>Type of Task:</label>
+    <input type="text" id="typeInput" placeholder="e.g., Homework, Practice, Quiz">
+    <label>Location:</label>
+    <select id="locationInput">
+      <option value="inClass">In Class</option>
+      <option value="atHome">At Home</option>
+    </select>
+    <label>Due Date (MM/DD/YYYY):</label>
+    <input type="text" id="dateInput" placeholder="MM/DD/YYYY" maxlength="10">
+    <label>Due Time (HH:MM AM/PM):</label>
+    <input type="text" id="timeInput" placeholder="HH:MM AM/PM" maxlength="8">
+    <label>Priority:</label>
+    <select id="priorityInput">
+      <option value="urgent">Urgent</option>
+      <option value="medium">Medium</option>
+      <option value="low">Low</option>
+    </select>
+    <button id="addTaskBtn">Add Task</button>
+  </div>
+
+  <div class="tasks-section">
+    <div class="task-list" id="activeTasks">
+      <h3>Active Tasks</h3>
+    </div>
+    <div class="task-list" id="completedTasks">
+      <h3>Completed</h3>
+    </div>
+  </div>
+</div>
+
+<div id="sweetMessage">I'm soooo proud of you. You got ts, bb !</div>
+<div class="footer">developers: ayesha amante, levi narca</div>
+<audio id="bellAudio" src="https://www.soundjay.com/buttons/sounds/bell-ringing-05.mp3" preload="auto"></audio>
+
+<script>
+let tasks=[];
+
+// Date input automatic slashes
+document.getElementById('dateInput').addEventListener('input',function(){
+  let val=this.value.replace(/\D/g,'');
+  if(val.length>2) val=val.slice(0,2)+'/'+val.slice(2);
+  if(val.length>5) val=val.slice(0,5)+'/'+val.slice(5);
+  this.value=val.slice(0,10);
+});
+
+// Time input - now AM/PM allowed freely
+document.getElementById('timeInput').addEventListener('input',function(){
+  let val=this.value.toUpperCase();
+  // Allow numbers, colon, space, A/P/M
+  val = val.replace(/[^0-9APM: ]/gi,'');
+  // Insert colon automatically after 2 digits if missing
+  let parts=val.split(' ');
+  if(parts[0] && !parts[0].includes(':') && parts[0].length>2){
+    parts[0]=parts[0].slice(0,2)+':'+parts[0].slice(2);
+  }
+  this.value=parts.join(' ').trim();
+});
+
+function parseDateTime(dateStr,timeStr){
+  let [month,day,year]=dateStr.split('/').map(Number);
+  if(!month||!day||!year) return null;
+  let timeParts=timeStr.split(' ');
+  if(timeParts.length!==2) return null;
+  let [hours,minutes]=timeParts[0].split(':').map(Number);
+  let meridiem=timeParts[1].toUpperCase();
+  if(isNaN(hours)||isNaN(minutes)||(meridiem!=='AM'&&meridiem!=='PM')) return null;
+  if(meridiem==='PM'&&hours!==12) hours+=12;
+  if(meridiem==='AM'&&hours===12) hours=0;
+  return new Date(year,month-1,day,hours,minutes,0);
+}
+
+function formatCountdown(ms){
+  if(ms<0) ms=0;
+  let totalMinutes=Math.floor(ms/60000);
+  let minutes=totalMinutes%60;
+  let totalHours=Math.floor(totalMinutes/60);
+  let hours=totalHours%24;
+  let totalDays=Math.floor(totalHours/24);
+  let weeks=Math.floor(totalDays/7);
+  let days=totalDays%7;
+  let months=Math.floor(totalDays/30);
+  let years=Math.floor(months/12);
+  months%=12;
+  return `${years}y ${months}m ${weeks}w ${days}d ${hours}h ${minutes}m`;
+}
+
+function showSweetMessage(){
+  let msg=document.getElementById('sweetMessage');
+  msg.style.display='block';
+  setTimeout(()=>{ msg.style.display='none'; },5000);
+}
+
+function addTask(){
+  let subject=document.getElementById('subjectInput').value.trim();
+  let type=document.getElementById('typeInput').value.trim();
+  let location=document.getElementById('locationInput').value;
+  let date=document.getElementById('dateInput').value.trim();
+  let time=document.getElementById('timeInput').value.trim();
+  let priority=document.getElementById('priorityInput').value;
+
+  if(!subject||!type||!date||!time){ alert("Fill all fields!"); return; }
+  let dueDate=parseDateTime(date,time);
+  if(!dueDate){ alert("Invalid date or time!"); return; }
+  if(dueDate<new Date()){ alert("Date/time already passed!"); return; }
+
+  let duplicate=tasks.find(t=>t.subject===subject && t.type===type && t.location===location && t.dueDate.getTime()===dueDate.getTime());
+  if(duplicate && !confirm("This exact task already exists. Add again?")) return;
+
+  tasks.push({subject,type,location,dueDate,priority,completed:false});
+
+  document.getElementById('subjectInput').value='';
+  document.getElementById('typeInput').value='';
+  document.getElementById('dateInput').value='';
+  document.getElementById('timeInput').value='';
+
+  renderTasks();
+}
+
+function renderTasks(){
+  let activeDiv=document.getElementById('activeTasks');
+  let completedDiv=document.getElementById('completedTasks');
+  activeDiv.innerHTML='<h3>Active Tasks</h3>';
+  completedDiv.innerHTML='<h3>Completed</h3>';
+
+  const prioOrder={urgent:0,medium:1,low:2};
+  tasks.sort((a,b)=>{
+    if(a.completed!==b.completed) return a.completed-b.completed;
+    if(a.dueDate.getTime()!==b.dueDate.getTime()) return a.dueDate-b.dueDate;
+    return prioOrder[a.priority]-prioOrder[b.priority];
+  });
+
+  tasks.forEach((task,index)=>{
+    let div=document.createElement('div');
+    div.classList.add('task');
+    if(task.completed) div.classList.add('completed');
+
+    let colorBlock=document.createElement('span');
+    colorBlock.classList.add('priority-block', task.completed?'completed':task.priority);
+
+    let info=document.createElement('div');
+    info.classList.add('task-info');
+    info.innerHTML=`<strong>${task.subject}</strong> - ${task.type}<br>${task.location==="inClass"?"In Class":"At Home"}<br>Due: ${task.dueDate.toLocaleString()}`;
+
+    let countdown=document.createElement('span');
+    countdown.id=`countdown-${index}`;
+    countdown.style.marginLeft='10px';
+    countdown.textContent=task.completed?'Completed ✔':formatCountdown(task.dueDate-new Date());
+
+    let completeBtn=document.createElement('button');
+    completeBtn.textContent='Completed';
+    completeBtn.onclick=()=>{
+      task.completed=true;
+      showSweetMessage();
+      renderTasks();
+    };
+
+    info.appendChild(document.createElement('br'));
+    info.appendChild(countdown);
+    div.appendChild(colorBlock);
+    div.appendChild(info);
+    if(!task.completed) div.appendChild(completeBtn);
+
+    if(task.completed) completedDiv.appendChild(div);
+    else activeDiv.appendChild(div);
+  });
+}
+
+// Live countdown & bell
+setInterval(()=>{
+  tasks.forEach((task,index)=>{
+    if(task.completed) return;
+    let countdown=document.getElementById(`countdown-${index}`);
+    if(countdown){
+      let msLeft=task.dueDate-new Date();
+      countdown.textContent=formatCountdown(msLeft);
+      if(msLeft<=10*60*1000 && msLeft>0){
+        let audio=document.getElementById('bellAudio');
+        if(audio.paused){ audio.play(); setTimeout(()=>{ audio.pause(); audio.currentTime=0; },5000);}
+      }
+    }
+  });
+},1000);
+
+document.getElementById('addTaskBtn').addEventListener('click',addTask);
+</script>
+
+</body>
+</html>
