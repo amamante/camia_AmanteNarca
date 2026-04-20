@@ -2,388 +2,706 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>TaskMaster</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TaskMaster | Simple Study Planner by Levi & Ayesha</title>
 <style>
-body { font-family: "Century Gothic", Arial; background: #e0f7ff; margin:0; }
-.center-container { display:flex; justify-content:center; align-items:center; flex-direction:column; min-height:100vh; }
-.panel { background:white; padding:30px; border-radius:30px; box-shadow:0 10px 25px rgba(0,0,0,0.1); margin:20px; }
-input, select { width:100%; padding:12px; margin:8px 0; border-radius:15px; border:1px solid #ccc; }
-.main-btn { font-size:20px; padding:15px 40px; border-radius:25px; border:none; background:white; margin:10px; cursor:pointer; }
-.page { display:none; }
-.active { display:block; }
-.task { padding:10px; margin:10px 0; border-radius:15px; }
-.low { background:#cce0ff; }
-.medium { background:#fff5b3; }
-.urgent { background:#ffcccc; }
-.completed { background:#ccffdd; }
-.countdown { font-size:12px; margin-top:5px; }
-button { cursor:pointer; }
-#editSubjectsBtn { position: fixed; top: 10px; right: 10px; font-size:16px; padding:10px 15px; border-radius:20px; }
-.subject-row { display:flex; justify-content:space-between; align-items:center; margin:5px 0; padding:5px 10px; border:1px solid #ccc; border-radius:10px; }
-.subject-row input { width:70%; border-radius:10px; padding:5px; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-/* Calendar styles */
-.calendar-container { width:75vw; max-width:1200px; margin:20px auto; background:white; border-radius:25px; padding:20px; box-shadow:0 10px 25px rgba(0,0,0,0.1); }
-.calendar-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:15px; }
-.calendar-weekdays { display:grid; grid-template-columns:repeat(7,1fr); margin-bottom:5px; }
-.calendar-weekdays div { text-align:center; font-weight:bold; }
-.calendar-grid { display:grid; grid-template-columns:repeat(7,1fr); gap:5px; }
-.calendar-day { border:1px solid #ccc; border-radius:10px; padding:5px; min-height:80px; position:relative; cursor:pointer; }
-.calendar-day .day-number { font-weight:bold; margin-bottom:5px; }
-.task-bar { border-radius:5px; color:#000; font-size:11px; padding:2px 3px; margin:2px 0; overflow:hidden; white-space:nowrap; text-overflow:ellipsis;}
-</style>
+        body {
+            font-family: 'Segoe UI', 'Roboto', system-ui, -apple-system, sans-serif;
+            background: linear-gradient(145deg, #e9f0ff 0%, #d9e4fc 100%);
+            min-height: 100vh;
+            padding: 24px 20px;
+        }
+
+        .container {
+            
+            max-width: 1300px;
+            margin: 0 auto;
+        }
+
+        .page {
+            display: none;
+            animation: fadeIn 0.25s ease;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(6px);}
+            to { opacity: 1; transform: translateY(0);}
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 24px;
+            margin: 32px 0 40px;
+        }
+
+        .dashboard-card {
+            background: white;
+            padding: 28px 20px;
+            border-radius: 32px;
+            text-align: center;
+            transition: all 0.2s;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+            cursor: pointer;
+            border: 1px solid rgba(66, 99, 235, 0.1);
+        }
+
+        .dashboard-card:hover {
+            transform: translateY(-5px);
+            background: #ffffff;
+            box-shadow: 0 20px 30px rgba(0,0,0,0.12);
+            border-color: #4263eb;
+        }
+
+        .dashboard-card h3 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #1e2a44;
+        }
+
+        .dashboard-card p {
+            color: #5a6e8a;
+            font-size: 0.9rem;
+        }
+
+        .stats-preview {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 20px;
+            margin-top: 16px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 28px;
+            text-align: center;
+            box-shadow: 0 5px 14px rgba(0,0,0,0.05);
+        }
+
+        .stat-number {
+            font-size: 2.3rem;
+            font-weight: 800;
+            color: #4263eb;
+            display: block;
+            line-height: 1.2;
+        }
+
+        .stat-label {
+            color: #4a627a;
+            font-weight: 500;
+            margin-top: 6px;
+        }
+
+        .panel {
+            background: white;
+            border-radius: 32px;
+            padding: 28px 32px;
+            margin: 20px 0;
+            box-shadow: 0 8px 22px rgba(0,0,0,0.06);
+        }
+
+        .page-header {
+            margin-bottom: 20px;
+        }
+
+        .back-link {
+            color: white;
+            background: rgba(66, 99, 235, 0.2);
+            display: inline-block;
+            margin-bottom: 16px;
+            padding: 6px 20px;
+            border-radius: 60px;
+            cursor: pointer;
+            font-weight: 500;
+            backdrop-filter: blur(2px);
+            transition: 0.2s;
+        }
+
+        .back-link:hover {
+            background: rgba(66, 99, 235, 0.35);
+            transform: translateX(-3px);
+        }
+
+        h1 {
+            color: #1e2f4e;
+            font-size: 2rem;
+            font-weight: 700;
+            letter-spacing: -0.3px;
+        }
+
+        h2, h3 {
+            color: #1f2e48;
+            margin-bottom: 18px;
+            font-weight: 600;
+        }
+
+        .btn {
+            padding: 10px 26px;
+            border: none;
+            border-radius: 44px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+            margin-right: 8px;
+            margin-top: 4px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn-primary {
+            background: #4263eb;
+            color: white;
+            box-shadow: 0 2px 6px rgba(66,99,235,0.3);
+        }
+        .btn-primary:hover { background: #2f4fcf; transform: translateY(-2px); }
+
+        .btn-success {
+            background: #2c7a4d;
+            color: white;
+        }
+        .btn-success:hover { background: #1f5f3b; transform: translateY(-2px); }
+
+        .btn-danger {
+            background: #dc6b4a;
+            color: white;
+        }
+        .btn-danger:hover { background: #c25a3b; }
+
+        .btn-secondary {
+            background: #94a3b8;
+            color: white;
+        }
+        .btn-secondary:hover { background: #7c8aa0; }
+
+        .btn-small {
+            padding: 5px 14px;
+            font-size: 0.75rem;
+            border-radius: 40px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            margin: 4px 6px 0 0;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            font-weight: 600;
+            color: #2c3e66;
+            margin-bottom: 8px;
+            display: block;
+        }
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        input, select {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1.5px solid #e2e8f0;
+            border-radius: 28px;
+            font-size: 0.9rem;
+            background: #ffffff;
+        }
+        input:focus, select:focus {
+            outline: none;
+            border-color: #4263eb;
+            box-shadow: 0 0 0 2px rgba(66,99,235,0.2);
+        }
+        .task {
+            background: #fefefe;
+            padding: 16px 18px;
+            margin: 12px 0;
+            border-radius: 24px;
+            border-left: 6px solid;
+            transition: 0.1s;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+        .task.low { border-left-color: #3b82f6; background: #f0f6ff; }
+        .task.medium { border-left-color: #f5a623; background: #fff9ef; }
+        .task.urgent { border-left-color: #e55353; background: #fff4f2; }
+        .task.completed { border-left-color: #2c7a4d; background: #eef7ef; opacity: 0.85; }
+
+        .task-title {
+            font-weight: 700;
+            font-size: 1.05rem;
+            margin-bottom: 6px;
+            color: #1f2a44;
+        }
+        .task-meta {
+            font-size: 0.8rem;
+            color: #5c6f87;
+            margin: 4px 0;
+        }
+
+        .subject-list {
+            margin-top: 18px;
+        }
+        .subject-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #f3f6fc;
+            padding: 10px 18px;
+            margin: 8px 0;
+            border-radius: 60px;
+        }
+
+        .calendar-wrapper {
+            background: white;
+            border-radius: 32px;
+            padding: 24px;
+            box-shadow: 0 10px 28px rgba(0,0,0,0.06);
+        }
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            margin-bottom: 22px;
+        }
+        .calendar-nav button {
+            background: #eef3ff;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 60px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-left: 10px;
+        }
+        .weekdays {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            text-align: center;
+            font-weight: 700;
+            color: #2d4379;
+            margin-bottom: 12px;
+        }
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 10px;
+        }
+        .cal-day {
+            background: #fafcff;
+            border-radius: 20px;
+            padding: 12px 6px;
+            min-height: 95px;
+            cursor: pointer;
+            border: 1px solid #e9edf4;
+            transition: 0.1s;
+        }
+        .cal-day:hover { background: #eef2fc; transform: scale(0.98); }
+        .day-number {
+            font-weight: 700;
+            margin-bottom: 8px;
+            font-size: 1rem;
+        }
+        .task-badge {
+            background: #4263eb;
+            color: white;
+            font-size: 0.7rem;
+            padding: 2px 8px;
+            border-radius: 30px;
+            margin: 4px 2px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            font-weight: 500;
+        }
+        .toast {
+            position: fixed;
+            bottom: 28px;
+            right: 28px;
+            background: #2c3e50;
+            background: linear-gradient(135deg, #2c7a4d, #1f5f3b);
+            color: white;
+            padding: 14px 26px;
+            border-radius: 50px;
+            animation: slideIn 0.3s ease;
+            z-index: 2000;
+            font-weight: 600;
+            box-shadow: 0 12px 22px rgba(0,0,0,0.2);
+        }
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        .empty-state {
+            text-align: center;
+            padding: 34px;
+            color: #6a7e9e;
+            font-weight: 500;
+        }
+        @media (max-width: 680px) {
+            .form-row { grid-template-columns: 1fr; }
+            .calendar-grid { gap: 5px; }
+            .cal-day { min-height: 70px; padding: 6px 3px; }
+        }
+    </style>
 </head>
 <body>
-
-<button id="editSubjectsBtn" onclick="showSubjectsPanel()">Edit Subjects</button>
-
-<!-- SUBJECT PAGE -->
-<div id="subjectPage" class="page active">
-  <div class="center-container">
-    <div class="panel">
-      <h1 style="text-align:center; font-size:42px;">Welcome to TaskMaster!</h1>
-      <p style="text-align:center; margin-bottom:20px;">Please enter all your subjects.</p>
-      <input id="subjectInput" placeholder="Enter a subject">
-      <button class="main-btn" onclick="addSubject()">Add Subject</button>
-      <h3>Your Subjects:</h3>
-      <div id="subjectList"></div>
-      <button class="main-btn" onclick="finishSubjects()">Continue</button>
+<div class="container">
+    <div id="homePage" class="page active">
+        <div style="text-align: center; margin-bottom: 20px;">
+            <h1 style="font-size: 2.2rem;">TaskMaster</h1>
+            <p style="color: #2c3e66; margin-top: 6px;">by Levi &amp; Ayesha</p>
+        </div>
+        <div class="dashboard-grid">
+            <div class="dashboard-card" onclick="showPage('subjectsPage')">
+                <h3>Manage Subjects</h3>
+                <p>Add, edit or remove your study subjects</p>
+            </div>
+            <div class="dashboard-card" onclick="showPage('addTaskPage')">
+                <h3>Add Tasks</h3>
+                <p>Homework, projects, quizzes, deadlines</p>
+            </div>
+            <div class="dashboard-card" onclick="showPage('viewTasksPage')">
+                <h3>View Tasks</h3>
+                <p>Track pending & completed work</p>
+            </div>
+            <div class="dashboard-card" onclick="showPage('calendarPage')">
+                <h3>Calendar View</h3>
+                <p>See deadlines on monthly grid</p>
+            </div>
+        </div>
+        <div class="stats-preview">
+            <div class="stat-card"><span class="stat-number" id="totalTasks">0</span><span class="stat-label">Total tasks</span></div>
+            <div class="stat-card"><span class="stat-number" id="pendingTasks">0</span><span class="stat-label">Pending</span></div>
+            <div class="stat-card"><span class="stat-number" id="completedTasks">0</span><span class="stat-label">Completed</span></div>
+        </div>
     </div>
-  </div>
-</div>
 
-<!-- HOME PAGE -->
-<div id="homePage" class="page">
-  <div class="center-container">
-    <h1 id="welcomeTitle">Welcome to TaskMaster!</h1>
-    <button class="main-btn" onclick="showPage('addPage')">Add Task</button>
-    <button class="main-btn" onclick="showPage('viewPage')">View Tasks</button>
-    <button class="main-btn" onclick="showPage('calendarPage')">Task Calendar</button>
-  </div>
-</div>
-
-<!-- ADD TASK PAGE -->
-<div id="addPage" class="page">
-  <div class="center-container">
-    <div class="panel">
-      <h2>Add Task</h2>
-      <select id="subject"></select>
-      <input id="type" placeholder="Task Type">
-      <input id="date" placeholder="MM/DD/YYYY">
-      <input id="time" placeholder="HH:MM AM/PM">
-      <select id="priority">
-        <option value="urgent">High Priority</option>
-        <option value="medium">Medium Priority</option>
-        <option value="low">Low Priority</option>
-      </select>
-      <button class="main-btn" onclick="addTask()">Add Task</button>
-      <button class="main-btn" onclick="showPage('homePage')">Back</button>
-      <h3>Active Tasks</h3>
-      <div id="taskListAdd"></div>
+    <div id="subjectsPage" class="page">
+        <div class="page-header"><span class="back-link" onclick="showPage('homePage')">← Back to Home</span><h1>Subjects</h1></div>
+        <div class="panel">
+            <div style="display: flex; gap: 12px; flex-wrap: wrap; align-items: center;">
+                <input type="text" id="subjectInput" placeholder="Subject name (e.g., Mathematics)" style="flex: 2;">
+                <button class="btn btn-primary" onclick="addSubject()">+ Add Subject</button>
+            </div>
+            <div style="margin-top: 24px;"><h3>Your subject list</h3><div id="subjectList" class="subject-list"></div></div>
+            <button class="btn btn-success" onclick="goToAddTask()" style="margin-top: 20px;">Go to Add Tasks</button>
+        </div>
     </div>
-  </div>
-</div>
 
-<!-- EDIT TASK PAGE -->
-<div id="editPage" class="page">
-  <div class="center-container">
-    <div class="panel">
-      <h2>Edit Task</h2>
-      <select id="editSubject"></select>
-      <input id="editType">
-      <input id="editDate">
-      <input id="editTime">
-      <select id="editPriority">
-        <option value="urgent">High Priority</option>
-        <option value="medium">Medium Priority</option>
-        <option value="low">Low Priority</option>
-      </select>
-      <button class="main-btn" onclick="saveEdit()">Save Changes</button>
-      <button class="main-btn" onclick="showPage('viewPage')">Back</button>
+    <div id="addTaskPage" class="page">
+        <div class="page-header"><span class="back-link" onclick="showPage('homePage')">← Back</span><h1>Create New Task</h1></div>
+        <div class="panel">
+            <form id="taskForm" onsubmit="event.preventDefault(); addTask();">
+                <div class="form-group"><label>Subject *</label><select id="subjectSelect" required><option value="">-- select subject --</option></select></div>
+                <div class="form-group"><label>Task name *</label><input type="text" id="taskType" placeholder="e.g., Algebra worksheet" required></div>
+                <div class="form-row"><div class="form-group"><label>Due date *</label><input type="date" id="taskDate" required></div><div class="form-group"><label>Due time *</label><input type="time" id="taskTime" required></div></div>
+                <div class="form-group"><label>Priority</label><select id="taskPriority"><option value="urgent">High priority</option><option value="medium">Medium priority</option><option value="low">Low priority</option></select></div>
+                <div><button type="submit" class="btn btn-success">+ Add Task</button><button type="button" class="btn btn-secondary" onclick="showPage('homePage')">Cancel</button></div>
+            </form>
+        </div>
     </div>
-  </div>
-</div>
+    <div id="viewTasksPage" class="page">
+        <div class="page-header"><span class="back-link" onclick="showPage('homePage')">← Dashboard</span><h1>Task Manager</h1></div>
+        <div class="panel"><h2>Active tasks <span style="background:#4263eb; color:white; border-radius:60px; padding:2px 12px; margin-left:8px;" id="activeCount">0</span></h2><div id="activeTasks"></div></div>
+        <div class="panel"><h2>Completed tasks <span style="background:#2c7a4d; color:white; border-radius:60px; padding:2px 12px; margin-left:8px;" id="completedCount">0</span></h2><div id="completedTasksList"></div></div>
+    </div>
 
-<!-- VIEW TASK PAGE -->
-<div id="viewPage" class="page">
-  <div class="center-container">
-    <div class="panel">
-      <h2>Active Tasks</h2>
-      <div id="activeTasks"></div>
-      <h2>Completed Tasks</h2>
-      <div id="completedTasks"></div>
-      <button class="main-btn" onclick="showPage('homePage')">Back</button>
+    <div id="calendarPage" class="page">
+        <div class="page-header"><span class="back-link" onclick="showPage('homePage')">← Home</span><h1>Deadline Calendar</h1></div>
+        <div class="calendar-wrapper">
+            <div class="calendar-header"><h2 id="monthYearDisplay"></h2><div class="calendar-nav"><button id="prevMonthBtn">◀ Prev</button><button id="nextMonthBtn">Next ▶</button></div></div>
+            <div class="weekdays" id="weekdaysRow"></div>
+            <div class="calendar-grid" id="calendarGrid"></div>
+            <p style="margin-top: 18px; font-size:0.8rem; text-align:center; color:#4f6f8f;">Click any day to see scheduled tasks</p>
+        </div>
     </div>
-  </div>
-</div>
-
-<!-- CALENDAR PAGE -->
-<div id="calendarPage" class="page">
-  <div class="center-container">
-    <div class="calendar-container">
-      <div class="calendar-header">
-        <button onclick="prevMonth()">&lt;</button>
-        <h2 id="calendarMonth"></h2>
-        <button onclick="nextMonth()">&gt;</button>
-      </div>
-      <div class="calendar-weekdays" id="calendarWeekdays"></div>
-      <div class="calendar-grid" id="calendarGrid"></div>
-      <button class="main-btn" onclick="showPage('homePage')">Back</button>
-    </div>
-  </div>
-</div>
-
-<!-- DAY VIEW PAGE -->
-<div id="dayPage" class="page">
-  <div class="center-container">
-    <div class="panel">
-      <h2 id="dayTitle"></h2>
-      <h3>Active Tasks</h3>
-      <div id="dayActiveTasks"></div>
-      <h3>Completed Tasks</h3>
-      <div id="dayCompletedTasks"></div>
-      <button class="main-btn" onclick="showPage('calendarPage')">Back to Calendar</button>
-    </div>
-  </div>
 </div>
 
 <script>
-let tasks = [];
-let subjects = [];
-let editIndex = null;
+  
+    let tasks = JSON.parse(localStorage.getItem('tasks') || '[]');
+    let subjects = JSON.parse(localStorage.getItem('subjects') || '[]');
 
-/* --- SUBJECTS --- */
-function addSubject() {
-    let input = document.getElementById('subjectInput');
-    let val = input.value.trim();
-    if (!val) return;
+    function saveTasks() { localStorage.setItem('tasks', JSON.stringify(tasks)); }
+    function saveSubjects() { localStorage.setItem('subjects', JSON.stringify(subjects)); }
 
-    // Prevent duplicates (case-insensitive)
-    if (subjects.some(s => s.toLowerCase() === val.toLowerCase())) {
-        alert("Subject already exists!");
-        return;
+ 
+    function escapeHtml(str) {
+        if(!str) return '';
+        return str.replace(/[&<>]/g, function(m) {
+            if(m === '&') return '&amp;';
+            if(m === '<') return '&lt;';
+            if(m === '>') return '&gt;';
+            return m;
+        });
     }
 
-    subjects.push(val);
-    input.value = '';
-    renderSubjects();
-}
 
-function renderSubjects() {
-    let div = document.getElementById('subjectList');
-    div.innerHTML = '';
-    subjects.forEach((s, i) => {
-        let row = document.createElement('div');
-        row.className = 'subject-row';
-        let input = document.createElement('input');
-        input.value = s;
-        input.onchange = function () { subjects[i] = this.value; renderTasks(); };
-        let del = document.createElement('button');
-        del.textContent = 'Remove';
-        del.onclick = () => {
-            let oldName = subjects[i];
-            subjects.splice(i, 1);
-            tasks.forEach(t => { if (!t.completed && t.subject === oldName) t.subject = "(Unassigned)"; });
-            renderSubjects();
-            renderTasks();
-        };
-        row.appendChild(input);
-        row.appendChild(del);
-        div.appendChild(row);
-    });
-}
-
-function finishSubjects() {
-    if (subjects.length === 0) { alert("Add at least one subject"); return; }
-    showPage('homePage');
-}
-
-function showSubjectsPanel() { showPage('subjectPage'); renderSubjects(); }
-
-/* --- NAVIGATION --- */
-function showPage(p) {
-    document.querySelectorAll('.page').forEach(pg => pg.classList.remove('active'));
-    document.getElementById(p).classList.add('active');
-    if (p === 'addPage') populateSubjects();
-    renderTasks();
-    if (p === 'calendarPage') renderCalendar();
-    if (p === 'editPage') populateSubjectsEdit();
-}
-
-/* --- POPULATE SUBJECTS --- */
-function populateSubjects() { 
-    subject.innerHTML = ''; 
-    subjects.forEach(s => { let o = document.createElement('option'); o.value = s; o.textContent = s; subject.appendChild(o); });
-}
-function populateSubjectsEdit() { 
-    editSubject.innerHTML = ''; 
-    subjects.forEach(s => { let o = document.createElement('option'); o.value = s; o.textContent = s; editSubject.appendChild(o); });
-}
-
-/* --- DATE/TIME AUTO --- */
-date.oninput = function() {
-    let v = this.value.replace(/\D/g,'');
-    if(v.length>2)v=v.slice(0,2)+'/'+v.slice(2);
-    if(v.length>5)v=v.slice(0,5)+'/'+v.slice(5);
-    this.value=v.slice(0,10);
-}
-time.oninput = function() {
-    let v=this.value.toUpperCase().replace(/[^0-9:APM ]/g,'');
-    if(/^\d{3,4}/.test(v)) v=v.replace(/^(\d{2})(\d{1,2})/,'$1:$2');
-    this.value=v;
-}
-
-/* --- PARSE DATE --- */
-function parseDate(d,t){ 
-    let [m,da,y]=d.split('/').map(Number); 
-    let [time,mer]=t.split(' '); 
-    let [h,min]=time.split(':').map(Number); 
-    if(mer==="PM"&&h!==12)h+=12; 
-    if(mer==="AM"&&h===12) h=0; 
-    return new Date(y,m-1,da,h,min);
-}
-
-/* --- TASK FUNCTIONS --- */
-function addTask(){
-    if(!subject.value||!type.value||!date.value||!time.value) return alert("Fill all fields");
-    let t={subject:subject.value,type:type.value,date:date.value,time:time.value,priority:priority.value,completed:false};
-    t.due=parseDate(t.date,t.time); 
-    tasks.push(t); 
-    type.value=''; date.value=''; time.value=''; 
-    renderTasks(); 
-}
-function openEdit(i){ 
-    editIndex=i; 
-    let t=tasks[i]; 
-    editSubject.value=t.subject; editType.value=t.type; editDate.value=t.date; editTime.value=t.time; editPriority.value=t.priority; 
-    showPage('editPage');
-}
-function saveEdit(){ 
-    let t=tasks[editIndex]; 
-    t.subject=editSubject.value; t.type=editType.value; t.date=editDate.value; t.time=editTime.value; t.priority=editPriority.value; 
-    t.due=parseDate(t.date,t.time); 
-    if(!t.completed) t.completedOn = t.completedOn || null; 
-    showPage('viewPage'); renderTasks();
-}
-
-/* --- COMPLETE/UNDO --- */
-function toggleComplete(i){ 
-    let t = tasks[i]; 
-    t.completed = !t.completed; 
-    if(t.completed) t.completedOn = new Date(); 
-    renderTasks();
-}
-
-/* --- COUNTDOWN --- */
-function formatCountdown(ms){ 
-    if(ms<0) ms=0; 
-    let sec=Math.floor(ms/1000)%60; 
-    let min=Math.floor(ms/60000)%60; 
-    let hr=Math.floor(ms/3600000)%24; 
-    let day=Math.floor(ms/86400000); 
-    return `${day}d ${hr}h ${min}m ${sec}s`;
-}
-
-/* --- RENDER TASKS --- */
-function renderTasks(){
-  let activeDiv=document.getElementById('activeTasks'); 
-  let completedDiv=document.getElementById('completedTasks'); 
-  let taskListAddDiv=document.getElementById('taskListAdd');
-  if(activeDiv) activeDiv.innerHTML=''; 
-  if(completedDiv) completedDiv.innerHTML=''; 
-  if(taskListAddDiv) taskListAddDiv.innerHTML='';
-  tasks.forEach((t,i)=>{
-    if(taskListAddDiv && !t.completed){ 
-      let d=document.createElement('div'); 
-      d.className='task '+t.priority; 
-      d.innerHTML=`<b>${t.subject}</b><br>${t.type}<br>${t.due.toLocaleString()}<br><button onclick="toggleComplete(${i})">Complete</button><button onclick="openEdit(${i})">Edit</button>`; 
-      taskListAddDiv.appendChild(d);
+    function showPage(pageId) {
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+        document.getElementById(pageId).classList.add('active');
+        if (pageId === 'homePage') updateStats();
+        else if (pageId === 'subjectsPage') renderSubjectsList();
+        else if (pageId === 'addTaskPage') populateSubjectSelect();
+        else if (pageId === 'viewTasksPage') renderAllTasks();
+        else if (pageId === 'calendarPage') renderCalendar();
     }
-    if(activeDiv && !t.completed){ 
-      let d=document.createElement('div'); 
-      d.className='task '+t.priority; 
-      d.innerHTML=`<b>${t.subject}</b><br>Type: ${t.type}<br>Due: ${t.due.toLocaleString()}<br><div id="cd-${i}" class="countdown">${formatCountdown(t.due-new Date())}</div><button onclick="toggleComplete(${i})">Complete</button><button onclick="openEdit(${i})">Edit</button>`; 
-      activeDiv.appendChild(d);
+
+    function goToAddTask() {
+        if(subjects.length === 0) { alert("Please add at least one subject first."); return; }
+        showPage('addTaskPage');
     }
-    if(completedDiv && t.completed){ 
-      let d=document.createElement('div'); 
-      d.className='task completed'; 
-      d.innerHTML=`Subject: ${t.subject}<br>Type: ${t.type}<br>Due: ${t.due.toLocaleString()}<br>Completed On: ${t.completedOn.toLocaleString()}<br><button onclick="toggleComplete(${i})">Undo Complete</button><button onclick="openEdit(${i})">Edit</button>`; 
-      completedDiv.appendChild(d);
+
+    function updateStats() {
+        document.getElementById('totalTasks').textContent = tasks.length;
+        document.getElementById('pendingTasks').textContent = tasks.filter(t => !t.completed).length;
+        document.getElementById('completedTasks').textContent = tasks.filter(t => t.completed).length;
     }
-  });
-}
 
-/* --- LIVE COUNTDOWN --- */
-setInterval(()=>{ 
-  tasks.forEach((t,i)=>{ 
-    let cd=document.getElementById(`cd-${i}`); 
-    if(cd) cd.textContent=formatCountdown(t.due-new Date()); 
-    let cdDay=document.getElementById(`cd-day-${i}`); 
-    if(cdDay) cdDay.textContent=formatCountdown(t.due-new Date()); 
-  }); 
-},1000);
 
-/* --- CALENDAR --- */
-let currentMonth=new Date();
-function renderCalendar(){
-  document.getElementById('calendarMonth').textContent=currentMonth.toLocaleString('default',{month:'long',year:'numeric'});
-  const weekdays=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
-  let wdDiv=document.getElementById('calendarWeekdays');
-  wdDiv.innerHTML='';
-  weekdays.forEach(d=>{ let div=document.createElement('div'); div.textContent=d; wdDiv.appendChild(div);});
-  let grid=document.getElementById('calendarGrid');
-  grid.innerHTML='';
-  let firstDay=new Date(currentMonth.getFullYear(),currentMonth.getMonth(),1);
-  let lastDay=new Date(currentMonth.getFullYear(),currentMonth.getMonth()+1,0);
-  for(let i=0;i<firstDay.getDay();i++){ grid.appendChild(document.createElement('div'));}
-  for(let d=1; d<=lastDay.getDate(); d++){
-    let dayDiv=document.createElement('div'); 
-    dayDiv.className='calendar-day';
-    dayDiv.innerHTML=`<div class="day-number">${d}</div>`;
-    let dayDate=new Date(currentMonth.getFullYear(),currentMonth.getMonth(),d);
-    tasks.filter(t=>t.due.toDateString()===dayDate.toDateString() && !t.completed).forEach(t=>{
-      let span=document.createElement('div');
-      span.className='task-bar';
-      span.textContent=`${t.subject}: ${t.type}`;
-      if(t.priority==='urgent') span.style.backgroundColor='#ffcccc';
-      else if(t.priority==='medium') span.style.backgroundColor='#fff5b3';
-      else span.style.backgroundColor='#cce0ff';
-      dayDiv.appendChild(span);
-    });
-    dayDiv.onclick=()=>showDay(dayDate);
-    grid.appendChild(dayDiv);
-  }
-}
-function prevMonth(){ currentMonth.setMonth(currentMonth.getMonth()-1); renderCalendar(); }
-function nextMonth(){ currentMonth.setMonth(currentMonth.getMonth()+1); renderCalendar(); }
+    function addSubject() {
+        const input = document.getElementById('subjectInput');
+        const val = input.value.trim();
+        if(!val) return alert("Enter subject name");
+        if(subjects.some(s => s.toLowerCase() === val.toLowerCase())) return alert("Subject already exists");
+        subjects.push(val);
+        saveSubjects();
+        input.value = '';
+        renderSubjectsList();
+        if(document.getElementById('subjectSelect')) populateSubjectSelect();
+    }
 
-/* --- DAY VIEW --- */
-function showDay(date){ 
-  showPage('dayPage'); 
-  document.getElementById('dayTitle').textContent='Tasks for '+date.toDateString(); 
-  let activeDiv=document.getElementById('dayActiveTasks'); 
-  let completedDiv=document.getElementById('dayCompletedTasks'); 
-  activeDiv.innerHTML=''; completedDiv.innerHTML='';
-  tasks.forEach((t,i)=>{ 
-    if(t.due.toDateString()===date.toDateString() && !t.completed){ 
-      let d=document.createElement('div'); 
-      d.className='task '+t.priority; 
-      d.innerHTML=`<b>${t.subject}</b><br>${t.type}<br>Due: ${t.due.toLocaleString()}<br><div id="cd-day-${i}" class="countdown">${formatCountdown(t.due-new Date())}</div><button onclick="toggleComplete(${i})">Complete</button><button onclick="openEdit(${i})">Edit</button>`; 
-      activeDiv.appendChild(d);
-    } 
-    if(t.due.toDateString()===date.toDateString() && t.completed){ 
-      let d=document.createElement('div'); 
-      d.className='task completed'; 
-      d.innerHTML=`Subject: ${t.subject}<br>Type: ${t.type}<br>Due: ${t.due.toLocaleString()}<br>Completed On: ${t.completedOn.toLocaleString()}<br><button onclick="toggleComplete(${i})">Undo Complete</button><button onclick="openEdit(${i})">Edit</button>`; 
-      completedDiv.appendChild(d);
-    } 
-  });
-}
+    function renderSubjectsList() {
+        const container = document.getElementById('subjectList');
+        if(!container) return;
+        if(subjects.length === 0) { container.innerHTML = '<div class="empty-state">No subjects yet. Add your first subject.</div>'; return; }
+        container.innerHTML = subjects.map((sub, idx) => `
+            <div class="subject-item">
+                <span>${escapeHtml(sub)}</span>
+                <button class="btn-small btn-danger" onclick="deleteSubject(${idx})">Remove</button>
+            </div>
+        `).join('');
+    }
 
-/* --- ENTER KEY --- */
-subjectInput.addEventListener('keydown',e=>{ if(e.key==='Enter') addSubject(); });
-type.addEventListener('keydown',e=>{ if(e.key==='Enter') addTask(); });
+    function deleteSubject(idx) {
+        const removed = subjects[idx];
+        subjects.splice(idx,1);
+        tasks = tasks.map(t => { if(t.subject === removed && !t.completed) t.subject = "Unassigned"; return t; });
+        saveSubjects(); saveTasks();
+        renderSubjectsList();
+        if(document.getElementById('subjectSelect')) populateSubjectSelect();
+        renderAllTasks(); updateStats();
+        if(document.getElementById('calendarPage').classList.contains('active')) renderCalendar();
+    }
+
+    function addTask() {
+        const subject = document.getElementById('subjectSelect')?.value;
+        const type = document.getElementById('taskType')?.value.trim();
+        const date = document.getElementById('taskDate')?.value;
+        const time = document.getElementById('taskTime')?.value;
+        const priority = document.getElementById('taskPriority')?.value;
+        if(!subject || !type || !date || !time) return alert("Please fill all fields");
+        const newTask = { id: Date.now(), subject, type, date, time, priority, completed: false, completedOn: null };
+        tasks.push(newTask);
+        saveTasks();
+        document.getElementById('taskType').value = '';
+        document.getElementById('taskDate').value = '';
+        document.getElementById('taskTime').value = '';
+        alert("Task added successfully");
+        showPage('homePage');
+        renderAllTasks(); updateStats();
+        if(document.getElementById('calendarPage').classList.contains('active')) renderCalendar();
+    }
+
+    function toggleComplete(taskId) {
+        const task = tasks.find(t => t.id === taskId);
+        if(!task) return;
+        if(!task.completed) {
+            task.completed = true;
+            task.completedOn = new Date();
+            saveTasks();
+            showCongratsMessage(task.type);
+        } else {
+            task.completed = false;
+            task.completedOn = null;
+            saveTasks();
+        }
+        renderAllTasks();
+        updateStats();
+        if(document.getElementById('calendarPage').classList.contains('active')) renderCalendar();
+    }
+
+    function deleteTask(taskId) {
+        if(confirm("Delete this task?")) {
+            tasks = tasks.filter(t => t.id !== taskId);
+            saveTasks();
+            renderAllTasks();
+            updateStats();
+            if(document.getElementById('calendarPage').classList.contains('active')) renderCalendar();
+        }
+    }
+
+    function showCongratsMessage(taskName) {
+        const toastDiv = document.createElement('div');
+        toastDiv.className = 'toast';
+        toastDiv.innerHTML = `Congratulations! Completed: "${escapeHtml(taskName)}"`;
+        document.body.appendChild(toastDiv);
+        setTimeout(() => toastDiv.remove(), 3800);
+    }
+
+    function renderAllTasks() {
+        const activeDiv = document.getElementById('activeTasks');
+        const completedDiv = document.getElementById('completedTasksList');
+        const activeCountSpan = document.getElementById('activeCount');
+        const completedCountSpan = document.getElementById('completedCount');
+        if(!activeDiv) return;
+        const active = tasks.filter(t => !t.completed);
+        const completed = tasks.filter(t => t.completed);
+        if(activeCountSpan) activeCountSpan.textContent = active.length;
+        if(completedCountSpan) completedCountSpan.textContent = completed.length;
+
+        if(active.length === 0) activeDiv.innerHTML = '<div class="empty-state">No pending tasks. Add a new task.</div>';
+        else activeDiv.innerHTML = active.map(t => `
+            <div class="task ${t.priority}">
+                <div class="task-title">${escapeHtml(t.type)}</div>
+                <div class="task-meta">${escapeHtml(t.subject)}</div>
+                <div class="task-meta">Due: ${t.date} at ${t.time}</div>
+                <div style="margin-top: 10px;">
+                    <button class="btn-small btn-success" onclick="toggleComplete(${t.id})">Complete</button>
+                    <button class="btn-small btn-danger" onclick="deleteTask(${t.id})">Delete</button>
+                </div>
+            </div>
+        `).join('');
+
+        if(completed.length === 0) completedDiv.innerHTML = '<div class="empty-state">No completed tasks yet. Finish a task to see it here.</div>';
+        else completedDiv.innerHTML = completed.map(t => `
+            <div class="task completed">
+                <div class="task-title">${escapeHtml(t.type)}</div>
+                <div class="task-meta">${escapeHtml(t.subject)}</div>
+                <div class="task-meta">Due: ${t.date} at ${t.time}</div>
+                <div class="task-meta">Completed: ${new Date(t.completedOn).toLocaleString()}</div>
+                <button class="btn-small" onclick="toggleComplete(${t.id})">Undo</button>
+            </div>
+        `).join('');
+    }
+
+    function populateSubjectSelect() {
+        const select = document.getElementById('subjectSelect');
+        if(!select) return;
+        if(subjects.length === 0) { select.innerHTML = '<option>No subjects yet. Add subjects first.</option>'; return; }
+        select.innerHTML = '<option value="">Select subject</option>' + subjects.map(s => `<option value="${escapeHtml(s)}">${escapeHtml(s)}</option>`).join('');
+    }
+
+    let currentCalendarDate = new Date();
+
+    function renderCalendar() {
+        const year = currentCalendarDate.getFullYear();
+        const month = currentCalendarDate.getMonth();
+        const firstDay = new Date(year, month, 1);
+        const startWeekday = firstDay.getDay(); // 0 = Sunday
+        const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+        const monthNames = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+        document.getElementById('monthYearDisplay').innerHTML = `${monthNames[month]} ${year}`;
+
+        const weekdays = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+        const weekRow = document.getElementById('weekdaysRow');
+        weekRow.innerHTML = weekdays.map(d => `<div style="font-weight:700; text-align:center;">${d}</div>`).join('');
+
+        const grid = document.getElementById('calendarGrid');
+        grid.innerHTML = '';
+
+        for(let i=0; i<startWeekday; i++) {
+            const emptyDiv = document.createElement('div');
+            emptyDiv.className = 'cal-day';
+            emptyDiv.style.background = '#f1f5f9';
+            emptyDiv.style.opacity = '0.5';
+            grid.appendChild(emptyDiv);
+        }
+
+        for(let d=1; d<=daysInMonth; d++) {
+            const dateStr = `${year}-${String(month+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+            const dayTasks = tasks.filter(t => t.date === dateStr && !t.completed);
+            const dayDiv = document.createElement('div');
+            dayDiv.className = 'cal-day';
+            dayDiv.innerHTML = `<div class="day-number">${d}</div>`;
+            dayTasks.slice(0, 3).forEach(tsk => {
+                const badge = document.createElement('div');
+                badge.className = 'task-badge';
+                let priorityColor = '#4263eb';
+                if(tsk.priority === 'urgent') priorityColor = '#e55353';
+                else if(tsk.priority === 'medium') priorityColor = '#f5a623';
+                badge.style.backgroundColor = priorityColor;
+                badge.textContent = tsk.type.length > 18 ? tsk.type.slice(0,15)+'..' : tsk.type;
+                dayDiv.appendChild(badge);
+            });
+            if(dayTasks.length > 3) {
+                const more = document.createElement('div');
+                more.className = 'task-badge';
+                more.style.backgroundColor = '#7e8c9e';
+                more.textContent = `+${dayTasks.length-3} more`;
+                dayDiv.appendChild(more);
+            }
+            dayDiv.addEventListener('click', (e) => {
+                e.stopPropagation();
+                showDayTasks(dateStr);
+            });
+            grid.appendChild(dayDiv);
+        }
+    }
+
+    function showDayTasks(dateStr) {
+        const dayTasks = tasks.filter(t => t.date === dateStr);
+        if(dayTasks.length === 0) {
+            alert(`No tasks scheduled on ${dateStr}. Add a task with this deadline.`);
+            return;
+        }
+        let msg = `Tasks for ${dateStr}:\n\n`;
+        dayTasks.forEach(t => {
+            msg += `- ${t.type} (${t.subject}) - ${t.completed ? 'Completed' : 'Pending'} | Priority: ${t.priority}\n`;
+        });
+        alert(msg);
+    }
+
+    function prevMonth() { currentCalendarDate.setMonth(currentCalendarDate.getMonth()-1); renderCalendar(); }
+    function nextMonth() { currentCalendarDate.setMonth(currentCalendarDate.getMonth()+1); renderCalendar(); }
+
+    document.getElementById('prevMonthBtn')?.addEventListener('click', prevMonth);
+    document.getElementById('nextMonthBtn')?.addEventListener('click', nextMonth);
+
+    if(subjects.length === 0) {
+        subjects = ["Mathematics", "Science", "English"];
+        saveSubjects();
+    }
+    if(tasks.length === 0) {
+        const today = new Date().toISOString().split('T')[0];
+        const tomorrow = new Date(Date.now() + 86400000).toISOString().split('T')[0];
+        const nextWeek = new Date(Date.now() + 3*86400000).toISOString().split('T')[0];
+        tasks = [
+            { id: 201, subject: "Mathematics", type: "Algebra exercises", date: today, time: "23:59", priority: "urgent", completed: false, completedOn: null },
+            { id: 202, subject: "Science", type: "Research proposal", date: tomorrow, time: "18:00", priority: "medium", completed: false, completedOn: null },
+            { id: 203, subject: "English", type: "Book report", date: nextWeek, time: "15:30", priority: "low", completed: false, completedOn: null }
+        ];
+        saveTasks();
+    }
+
+    renderSubjectsList();
+    populateSubjectSelect();
+    renderAllTasks();
+    updateStats();
+    renderCalendar();
 </script>
 </body>
 </html>
