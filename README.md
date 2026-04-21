@@ -4,58 +4,80 @@
 
 # TaskMaster
 
-## Project Title
-TaskMaster: A Python-Based Task Management System for Academic Organization
+**A Web-Based Study Planner for Academic Task Management**
 
 ## Project Description
-TaskMaster is a Python-based command-line task management system designed to help students organize and manage academic responsibilities efficiently.
 
-Students often face difficulties in tracking multiple assignments, deadlines, and priorities. This system provides a structured and centralized solution by allowing users to categorize tasks, assign priority levels, set due dates, and monitor completion status.
+TaskMaster is a web-based task management system designed to help students organize and manage academic responsibilities efficiently.
+
+It allows users to create, track, and manage tasks such as assignments, projects, and deadlines in a clean and structured interface. The system includes features like subject organization, priority levels, countdown timers, and a calendar view to improve productivity and time management.
+
+---
 
 ## Objectives
-- To organize academic tasks by category
-- To track task completion status
-- To manage deadlines using due dates
-- To prioritize tasks effectively
-- To implement a functional CRUD system
+
+* Organize academic tasks by subject
+* Track task completion status
+* Manage deadlines using date and time
+* Prioritize tasks effectively
+* Provide a simple and user-friendly interface
+
+---
 
 ## Features
-- Task Management System (Create, Read, Update, Delete)
-- Category Organization
-- Task Status Tracking
-- Deadline Management
-- Priority Assignment
-- Menu Navigation System
+
+* Task Management System (Create, Read, Update, Delete)
+* Subject Organization
+* Task Status Tracking (Active & Completed)
+* Deadline Management with Date & Time
+* Live Countdown Timer (updates every second)
+* Calendar View for deadlines
+* Local Storage Saving (data persists after refresh)
+* Edit and Delete Tasks
+* Completion Notification Message
+
+---
 
 ## How to Run the Program
-1. Make sure Python is installed
-2. Place all files in the same folder
-3. Open terminal / command prompt
-4. Run:
 
-## Sample Output
+1. Download or copy the project files
+2. Open the `.html` file in any web browser (Chrome, Edge, etc.)
+3. Start using TaskMaster
 
-—— TaskMaster ——
+---
 
-1. Add Task
-2. View Tasks
-3. Update Task
-4. Remove Task
-5. Exit
+## Sample Usage
 
-Choose an option: Add Task
+* Add subjects (e.g., Math, Science, English)
+* Create tasks with deadlines and priority
+* View tasks in dashboard or calendar
+* Mark tasks as completed
+* Track remaining time using countdown
 
-Enter category: MATH  
-Enter task: Problem Set 5  
-Enter priority: High  
-Enter due date: March 10  
-
-Task added successfully.
+---
 
 ## Project Status
-- Core system implemented
-- Documentation updated (Quarter 3)
-- Ready for further improvements
+
+* UI and UX improvements completed
+* Countdown timer implemented
+* Calendar feature implemented
+* Local storage enabled for persistent data
+* Final testing and enhancements ongoing
+
+---
+
+## Areas for Improvement
+
+* Add duplicate task warning system
+* Improve error handling
+* Add sound notification for deadlines
+* Optimize performance for large task lists
+
+---
 
 ## Developers
-Amante & Narca
+Ayesha Martine M. Amante
+Narca, Leila Vivienne L.
+Amante & Narca (8 – Camia)
+
+A
