@@ -24,6 +24,7 @@
             margin: 0 auto;
         }
 
+        /* page transitions */
         .page {
             display: none;
             animation: fadeIn 0.25s ease;
@@ -38,6 +39,7 @@
             to { opacity: 1; transform: translateY(0);}
         }
 
+        /* dashboard cards - plain text, no icons */
         .dashboard-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -75,6 +77,7 @@
             font-size: 0.9rem;
         }
 
+        /* stats row */
         .stats-preview {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
@@ -104,6 +107,7 @@
             margin-top: 6px;
         }
 
+        /* panels & forms */
         .panel {
             background: white;
             border-radius: 32px;
@@ -147,6 +151,7 @@
             font-weight: 600;
         }
 
+        /* buttons */
         .btn {
             padding: 10px 26px;
             border: none;
@@ -197,6 +202,7 @@
             margin: 4px 6px 0 0;
         }
 
+        /* forms */
         .form-group {
             margin-bottom: 20px;
         }
@@ -224,6 +230,8 @@
             border-color: #4263eb;
             box-shadow: 0 0 0 2px rgba(66,99,235,0.2);
         }
+
+        /* task cards - color retained, no icons */
         .task {
             background: #fefefe;
             padding: 16px 18px;
@@ -250,6 +258,7 @@
             margin: 4px 0;
         }
 
+        /* subject list */
         .subject-list {
             margin-top: 18px;
         }
@@ -263,6 +272,7 @@
             border-radius: 60px;
         }
 
+        /* calendar styles - keep clean */
         .calendar-wrapper {
             background: white;
             border-radius: 32px;
@@ -358,7 +368,32 @@
 </head>
 <body>
 <div class="container">
-    <div id="homePage" class="page active">
+<div class="container">
+
+    <!-- PASTE HERE -->
+    <!-- WELCOME PAGE -->
+<div id="welcomePage" class="page active">
+    <div style="text-align:center; margin-top:120px; padding:0 20px;">
+
+        <h1 style="font-size:3rem; font-weight:800; color:#1e2f4e; margin-bottom:20px;">
+            Welcome to TaskMaster !
+        </h1>
+
+        <p style="font-size:1.1rem; color:#2c3e66; line-height:1.6; max-width:700px; margin:0 auto;">
+            TaskMaster is a task management system designed to help students organize <br>
+and manage academic responsibilities efficiently. It allows users to track <br>
+assignments, set deadlines, and monitor progress in a simple and structured way. 
+        </p>
+
+        <div class="dashboard-card" style="max-width:300px; margin:40px auto 0;" onclick="startApp()">
+    <h3>Get Started</h3>
+    <p>Go to your TaskMaster dashboard</p>
+</div>
+
+    </div>
+</div>
+</div>    <!-- HOME PAGE / DASHBOARD -->
+    <div id="homePage" class="page">
         <div style="text-align: center; margin-bottom: 20px;">
             <h1 style="font-size: 2.2rem;">TaskMaster</h1>
             <p style="color: #2c3e66; margin-top: 6px;">by Levi &amp; Ayesha</p>
@@ -388,8 +423,9 @@
         </div>
     </div>
 
+    <!-- SUBJECTS PAGE -->
     <div id="subjectsPage" class="page">
-        <div class="page-header"><span class="back-link" onclick="showPage('homePage')">← Back to Home</span><h1>Subjects</h1></div>
+        <div class="page-header"><span class="back-link" onclick="goBack()">← Back to Home</span><h1>Subjects</h1></div>
         <div class="panel">
             <div style="display: flex; gap: 12px; flex-wrap: wrap; align-items: center;">
                 <input type="text" id="subjectInput" placeholder="Subject name (e.g., Mathematics)" style="flex: 2;">
@@ -400,26 +436,30 @@
         </div>
     </div>
 
+    <!-- ADD TASK PAGE -->
     <div id="addTaskPage" class="page">
-        <div class="page-header"><span class="back-link" onclick="showPage('homePage')">← Back</span><h1>Create New Task</h1></div>
+        <div class="page-header"><span class="back-link"onclick="goBack()">← Back</span><h1>Create New Task</h1></div>
         <div class="panel">
             <form id="taskForm" onsubmit="event.preventDefault(); addTask();">
                 <div class="form-group"><label>Subject *</label><select id="subjectSelect" required><option value="">-- select subject --</option></select></div>
                 <div class="form-group"><label>Task name *</label><input type="text" id="taskType" placeholder="e.g., Algebra worksheet" required></div>
                 <div class="form-row"><div class="form-group"><label>Due date *</label><input type="date" id="taskDate" required></div><div class="form-group"><label>Due time *</label><input type="time" id="taskTime" required></div></div>
                 <div class="form-group"><label>Priority</label><select id="taskPriority"><option value="urgent">High priority</option><option value="medium">Medium priority</option><option value="low">Low priority</option></select></div>
-                <div><button type="submit" class="btn btn-success">+ Add Task</button><button type="button" class="btn btn-secondary" onclick="showPage('homePage')">Cancel</button></div>
+                <div><button type="submit" class="btn btn-success">+ Add Task</button><button type="button" class="btn btn-secondary"onclick="goBack()">Cancel</button></div>
             </form>
         </div>
     </div>
+
+    <!-- VIEW TASKS PAGE -->
     <div id="viewTasksPage" class="page">
-        <div class="page-header"><span class="back-link" onclick="showPage('homePage')">← Dashboard</span><h1>Task Manager</h1></div>
+        <div class="page-header"><span class="back-link"onclick="goBack()">← Dashboard</span><h1>Task Manager</h1></div>
         <div class="panel"><h2>Active tasks <span style="background:#4263eb; color:white; border-radius:60px; padding:2px 12px; margin-left:8px;" id="activeCount">0</span></h2><div id="activeTasks"></div></div>
         <div class="panel"><h2>Completed tasks <span style="background:#2c7a4d; color:white; border-radius:60px; padding:2px 12px; margin-left:8px;" id="completedCount">0</span></h2><div id="completedTasksList"></div></div>
     </div>
 
+    <!-- CALENDAR PAGE -->
     <div id="calendarPage" class="page">
-        <div class="page-header"><span class="back-link" onclick="showPage('homePage')">← Home</span><h1>Deadline Calendar</h1></div>
+        <div class="page-header"><span class="back-link"onclick="goBack()">← Home</span><h1>Deadline Calendar</h1></div>
         <div class="calendar-wrapper">
             <div class="calendar-header"><h2 id="monthYearDisplay"></h2><div class="calendar-nav"><button id="prevMonthBtn">◀ Prev</button><button id="nextMonthBtn">Next ▶</button></div></div>
             <div class="weekdays" id="weekdaysRow"></div>
@@ -430,14 +470,21 @@
 </div>
 
 <script>
-  
+    // ---------- DATA (localStorage) ----------
     let tasks = JSON.parse(localStorage.getItem('tasks') || '[]');
+let editingTaskId = null;
     let subjects = JSON.parse(localStorage.getItem('subjects') || '[]');
+function goBack() {
+    showPage('homePage');
+}
+function startApp() {
+    showPage('homePage');
+}
 
     function saveTasks() { localStorage.setItem('tasks', JSON.stringify(tasks)); }
     function saveSubjects() { localStorage.setItem('subjects', JSON.stringify(subjects)); }
 
- 
+    // Helper: escape HTML
     function escapeHtml(str) {
         if(!str) return '';
         return str.replace(/[&<>]/g, function(m) {
@@ -447,14 +494,36 @@
             return m;
         });
     }
+function getCountdown(date, time) {
+    const due = new Date(`${date}T${time}`);
+    const now = new Date();
+    const diff = due - now;
 
+    if (diff <= 0) return "Overdue";
 
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const hrs = Math.floor((diff / (1000 * 60 * 60)) % 24);
+    const mins = Math.floor((diff / (1000 * 60)) % 60);
+    const secs = Math.floor((diff / 1000) % 60);
+
+    return `${days}d ${hrs}h ${mins}m ${secs}s`;
+}
+    // Navigation
     function showPage(pageId) {
         document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
         document.getElementById(pageId).classList.add('active');
         if (pageId === 'homePage') updateStats();
         else if (pageId === 'subjectsPage') renderSubjectsList();
         else if (pageId === 'addTaskPage') populateSubjectSelect();
+if (pageId === 'addTaskPage' && !editingTaskId) {
+    setTimeout(() => {
+        document.getElementById('subjectSelect').value = "";
+        document.getElementById('taskType').value = "";
+        document.getElementById('taskDate').value = "";
+        document.getElementById('taskTime').value = "";
+        document.getElementById('taskPriority').value = "urgent";
+    }, 0);
+}
         else if (pageId === 'viewTasksPage') renderAllTasks();
         else if (pageId === 'calendarPage') renderCalendar();
     }
@@ -470,7 +539,7 @@
         document.getElementById('completedTasks').textContent = tasks.filter(t => t.completed).length;
     }
 
-
+    // Subjects
     function addSubject() {
         const input = document.getElementById('subjectInput');
         const val = input.value.trim();
@@ -506,6 +575,7 @@
         if(document.getElementById('calendarPage').classList.contains('active')) renderCalendar();
     }
 
+    // Tasks
     function addTask() {
         const subject = document.getElementById('subjectSelect')?.value;
         const type = document.getElementById('taskType')?.value.trim();
@@ -513,13 +583,31 @@
         const time = document.getElementById('taskTime')?.value;
         const priority = document.getElementById('taskPriority')?.value;
         if(!subject || !type || !date || !time) return alert("Please fill all fields");
-        const newTask = { id: Date.now(), subject, type, date, time, priority, completed: false, completedOn: null };
+        if (editingTaskId) {
+    const task = tasks.find(t => t.id === editingTaskId);
+    if (task) {
+        task.subject = subject;
+        task.type = type;
+        task.date = date;
+        task.time = time;
+        task.priority = priority;
+    }
+    editingTaskId = null;
+    alert("Task updated successfully");
+} else {
+    const newTask = { id: Date.now(), subject, type, date, time, priority, completed: false, completedOn: null };
+if (typeof newTask !== "undefined") {
+    tasks.push(newTask);
+}
+    alert("Task added successfully");
+}
         tasks.push(newTask);
         saveTasks();
         document.getElementById('taskType').value = '';
         document.getElementById('taskDate').value = '';
         document.getElementById('taskTime').value = '';
         alert("Task added successfully");
+document.querySelector('#addTaskPage h1').textContent = "Create New Task";
         showPage('homePage');
         renderAllTasks(); updateStats();
         if(document.getElementById('calendarPage').classList.contains('active')) renderCalendar();
@@ -542,7 +630,21 @@
         updateStats();
         if(document.getElementById('calendarPage').classList.contains('active')) renderCalendar();
     }
+function editTask(taskId) {
+    const task = tasks.find(t => t.id === taskId);
+    if (!task) return;
 
+    editingTaskId = taskId;
+
+    showPage('addTaskPage');
+
+document.querySelector('#addTaskPage h1').textContent = "Edit Task";
+    document.getElementById('subjectSelect').value = task.subject;
+    document.getElementById('taskType').value = task.type;
+    document.getElementById('taskDate').value = task.date;
+    document.getElementById('taskTime').value = task.time;
+    document.getElementById('taskPriority').value = task.priority;
+}
     function deleteTask(taskId) {
         if(confirm("Delete this task?")) {
             tasks = tasks.filter(t => t.id !== taskId);
@@ -577,10 +679,13 @@
             <div class="task ${t.priority}">
                 <div class="task-title">${escapeHtml(t.type)}</div>
                 <div class="task-meta">${escapeHtml(t.subject)}</div>
-                <div class="task-meta">Due: ${t.date} at ${t.time}</div>
+                <div class="task-meta" id="countdown-${t.id}">Loading...</div>
+<div class="task-meta">Due: ${t.date} at ${t.time}</div>
                 <div style="margin-top: 10px;">
                     <button class="btn-small btn-success" onclick="toggleComplete(${t.id})">Complete</button>
-                    <button class="btn-small btn-danger" onclick="deleteTask(${t.id})">Delete</button>
+<button class="btn-small btn-secondary" onclick="editTask(${t.id})">Edit</button>
+<button class="btn-small btn-danger" onclick="deleteTask(${t.id})">Delete</button>
+                    <button class="btn-small btn-danger" style="display:none;" onclick="deleteTask(${t.id})">Delete</button>
                 </div>
             </div>
         `).join('');
@@ -596,7 +701,16 @@
             </div>
         `).join('');
     }
-
+function updateCountdowns() {
+    tasks.forEach(t => {
+        if (!t.completed) {
+            const el = document.getElementById(`countdown-${t.id}`);
+            if (el) {
+                el.textContent = "⏳ " + getCountdown(t.date, t.time);
+            }
+        }
+    });
+}
     function populateSubjectSelect() {
         const select = document.getElementById('subjectSelect');
         if(!select) return;
@@ -604,6 +718,7 @@
         select.innerHTML = '<option value="">Select subject</option>' + subjects.map(s => `<option value="${escapeHtml(s)}">${escapeHtml(s)}</option>`).join('');
     }
 
+    // ---------- CALENDAR LOGIC (auto mark deadlines) ----------
     let currentCalendarDate = new Date();
 
     function renderCalendar() {
@@ -623,6 +738,7 @@
         const grid = document.getElementById('calendarGrid');
         grid.innerHTML = '';
 
+        // empty cells before first day
         for(let i=0; i<startWeekday; i++) {
             const emptyDiv = document.createElement('div');
             emptyDiv.className = 'cal-day';
@@ -681,11 +797,28 @@
     document.getElementById('prevMonthBtn')?.addEventListener('click', prevMonth);
     document.getElementById('nextMonthBtn')?.addEventListener('click', nextMonth);
 
+    // INITIAL DEMO DATA (if empty)
     if(subjects.length === 0) {
         subjects = ["Mathematics", "Science", "English"];
         saveSubjects();
     }
     if(tasks.length === 0) {
+// FIX: restore demo data if corrupted (missing required fields)
+if (!localStorage.getItem('tasksInitialized')) {
+
+    const today = new Date().toISOString().split('T')[0];
+    const tomorrow = new Date(Date.now() + 86400000).toISOString().split('T')[0];
+    const nextWeek = new Date(Date.now() + 3*86400000).toISOString().split('T')[0];
+
+    tasks = [
+        { id: 201, subject: "Mathematics", type: "Worksheet", date: today, time: "23:59", priority: "urgent", completed: false, completedOn: null },
+        { id: 202, subject: "Science", type: "Probset", date: tomorrow, time: "10:20", priority: "medium", completed: false, completedOn: null },
+        { id: 203, subject: "English", type: "Book report", date: nextWeek, time: "15:30", priority: "low", completed: false, completedOn: null }
+    ];
+
+    saveTasks();
+    localStorage.setItem('tasksInitialized', 'true');
+}
         const today = new Date().toISOString().split('T')[0];
         const tomorrow = new Date(Date.now() + 86400000).toISOString().split('T')[0];
         const nextWeek = new Date(Date.now() + 3*86400000).toISOString().split('T')[0];
@@ -697,11 +830,33 @@
         saveTasks();
     }
 
+    // initial rendering
     renderSubjectsList();
     populateSubjectSelect();
     renderAllTasks();
     updateStats();
     renderCalendar();
+// Allow Enter key to submit task form
+document.addEventListener("keydown", function(e) {
+    const formPage = document.getElementById('addTaskPage');
+    
+    if (formPage.classList.contains('active') && e.key === "Enter") {
+        e.preventDefault();
+        addTask();
+    }
+});
+setInterval(updateCountdowns, 1000);
+document.addEventListener("keydown", function(e) {
+    const formPage = document.getElementById('addTaskPage');
+
+    if (formPage.classList.contains('active') && e.key === "Enter") {
+        e.preventDefault();
+        addTask();
+    }
+});
 </script>
 </body>
 </html>
+
+
+
