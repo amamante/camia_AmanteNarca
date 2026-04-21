@@ -76,8 +76,4 @@ It allows users to create, track, and manage tasks such as assignments, projects
 ---
 
 ## Developers
-Ayesha Martine M. Amante
-Narca, Leila Vivienne L.
 Amante & Narca (8 – Camia)
-
-A
