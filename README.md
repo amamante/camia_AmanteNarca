@@ -12,7 +12,7 @@ TaskMaster is a web-based task management system designed to help students organ
 
 It allows users to create, track, and manage tasks such as assignments, projects, and deadlines in a clean and structured interface. The system includes features like subject organization, priority levels, countdown timers, and a calendar view to improve productivity and time management.
 
----
+
 
 ## Objectives
 
@@ -22,7 +22,7 @@ It allows users to create, track, and manage tasks such as assignments, projects
 * Prioritize tasks effectively
 * Provide a simple and user-friendly interface
 
----
+
 
 ## Features
 
@@ -36,7 +36,7 @@ It allows users to create, track, and manage tasks such as assignments, projects
 * Edit and Delete Tasks
 * Completion Notification Message
 
----
+
 
 ## How to Run the Program
 
@@ -44,7 +44,7 @@ It allows users to create, track, and manage tasks such as assignments, projects
 2. Open the `.html` file in any web browser (Chrome, Edge, etc.)
 3. Start using TaskMaster
 
----
+
 
 ## Sample Usage
 
@@ -54,7 +54,7 @@ It allows users to create, track, and manage tasks such as assignments, projects
 * Mark tasks as completed
 * Track remaining time using countdown
 
----
+
 
 ## Project Status
 
@@ -64,7 +64,7 @@ It allows users to create, track, and manage tasks such as assignments, projects
 * Local storage enabled for persistent data
 * Final testing and enhancements ongoing
 
----
+
 
 ## Areas for Improvement
 
