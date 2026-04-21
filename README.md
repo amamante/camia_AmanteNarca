@@ -73,7 +73,7 @@ It allows users to create, track, and manage tasks such as assignments, projects
 * Add sound notification for deadlines
 * Optimize performance for large task lists
 
----
+
 
 ## Developers
 Amante & Narca (8 – Camia)
